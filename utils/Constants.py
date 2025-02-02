@@ -6,7 +6,7 @@ class LoggerEnum(Enum):
     LOGIN = 3
     ORDER = 4
 
-class UserEnum(Enum):
+class BrokerEnum(Enum):
     ICICI = 1
     ANGEL_ONE = 2
 

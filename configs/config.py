@@ -1,2 +1,2 @@
-users = {}
+brokers = {}
 loggers = {}

@@ -3,13 +3,13 @@ from configs import config
 from utils.Constants import *
 from breeze_connect import BreezeConnect
 
-user_enum = UserEnum.ICICI
+broker_enum = BrokerEnum.ICICI
 logger_enum = LoggerEnum.ORDER
 
 class Order:
     def __init__(self):
         self.logger: logging.Logger = config.loggers[logger_enum]
-        self.user: BreezeConnect = config.users[user_enum]
+        self.user: BreezeConnect = config.brokers[broker_enum]
 
     def send_order(self, order_options: dict):
         order_response = self.user.place_order(stock_code="",

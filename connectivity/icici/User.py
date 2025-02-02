@@ -1,15 +1,15 @@
 import urllib
 from breeze_connect import BreezeConnect
 import logging
-from utils.Constants import UserEnum, LoggerEnum
+from utils.Constants import *
 from configs import config
 
 #print("https://api.icicidirect.com/apiuser/login?api_key="+urllib.parse.quote_plus(api_key))
 
 logger_enum = LoggerEnum.LOGIN
-user_enum = UserEnum.ICICI
+broker_enum = BrokerEnum.ICICI
 
-class User:
+class Login:
     def __init__(self):
         self.logger: logging.Logger = config.loggers[logger_enum]
         self.api_key="00eo58S31N42J0p844~c34196CI7n025"
@@ -18,8 +18,8 @@ class User:
 
     def try_login(self):
 
-        config.users[user_enum] = BreezeConnect(api_key=self.api_key)
-        self.breeze: BreezeConnect = config.users[user_enum]
+        config.brokers[broker_enum] = BreezeConnect(api_key=self.api_key)
+        self.breeze: BreezeConnect = config.brokers[broker_enum]
 
         try:
             self.breeze.generate_session(api_secret=self.secret_key, session_token=self.api_session)

@@ -1,10 +1,11 @@
 import csv
 from protocol.InstrumentBase import instrument_base
 import logging
-from utils.Constants import LoggerEnum
+from utils.Constants import *
 from configs import config
 
 logger_enum = LoggerEnum.INSTRUMENT
+broker_enum = BrokerEnum.ICICI
 
 class Instrument:
     def __init__(self):
@@ -27,6 +28,7 @@ class Instrument:
             if source in row:
                 instrument_data[destination] = self.instrument_base.convert_value(destination, row[source])
 
+        instrument_data["broker"] = broker_enum
         instrument_data["expiry"] = None
         instrument_data["strike"] = None
         instrument_data["lot_size"] = 1

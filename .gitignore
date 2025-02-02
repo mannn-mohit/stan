@@ -1,1 +1,4 @@
 [Ll]ogs/
+__pycache__/
+*.pyc
+*.pyo

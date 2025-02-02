@@ -1,10 +1,11 @@
 import json
 from protocol.InstrumentBase import instrument_base
 import logging
-from utils.Constants import LoggerEnum
+from utils.Constants import *
 from configs import config
 
 logger_enum = LoggerEnum.INSTRUMENT
+broker_enum = BrokerEnum.ANGEL_ONE
 
 class Instrument:
     def __init__(self):
@@ -28,6 +29,8 @@ class Instrument:
         for source, destination in self.field_mapping.items():
             if source in row:
                 instrument_data[destination] = self.instrument_base.convert_value(destination, row[source])
+
+        instrument_data["broker"] = broker_enum
 
         ret_val, msg = self.instrument_base.add_instrument(instrument_data)
         self.logger.info(f"RetVal: {ret_val} and Msg: {msg} for data: {instrument_data}")
