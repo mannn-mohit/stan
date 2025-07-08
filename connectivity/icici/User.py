@@ -14,7 +14,8 @@ class Login:
         self.logger: logging.Logger = config.loggers[logger_enum]
         self.api_key="00eo58S31N42J0p844~c34196CI7n025"
         self.secret_key="8707619d(996h638l2H81t9bX8KG2523"
-        self.api_session="52134685"
+        self.api_session="52149636"
+        #print("https://api.icicidirect.com/apiuser/login?api_key="+urllib.parse.quote_plus(self.api_key))
 
     def try_login(self):
         config.brokers[broker_enum] = BreezeConnect(api_key=self.api_key)

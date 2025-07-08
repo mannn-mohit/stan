@@ -1,0 +1,19 @@
+{
+  "name": "Python + Mongo Dev Container",
+  "dockerComposeFile": [
+    "../baked/docker-compose.yml"
+  ],
+  "service": "stan",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
