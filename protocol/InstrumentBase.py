@@ -2,7 +2,8 @@ import uuid
 import logging
 from utils.Constants import *
 from configs import config
-from functools import singledispatch
+from utils.DBConfig import instrument_collection
+from bson import ObjectId
 
 logger_enum = LoggerEnum.INSTRUMENT
 
@@ -34,6 +35,13 @@ class InstrumentBase:
             return float(value)
         else:
             return value
+        
+    def serialize_for_mongo(self, data: dict) -> dict:
+        def serialize(val):
+            if isinstance(val, Enum):
+                return val.name  # or val.value
+            return val
+        return {k: serialize(v) for k, v in data.items()}
     
     def add_instrument(self, instrument_data: dict):
         if not isinstance(instrument_data, dict):
@@ -49,10 +57,21 @@ class InstrumentBase:
         if extra_keys:
             error = f"Unsupported keys in details: {', '.join(extra_keys)}"
             return False, error
-        
-        uuid_key = uuid.uuid4()
 
-        self.instruments[uuid_key] = instrument_data
+        self.instruments["uuid"] = uuid.uuid4()
+
+        instrument_data = self.serialize_for_mongo(instrument_data)
+
+        try:
+            result = instrument_collection.update_one(
+                {"token": instrument_data["token"], "broker": instrument_data["broker"]},
+                {"$set": instrument_data},
+                upsert=True
+            )
+            return True, "Inserted or updated instrument"
+        except Exception as e:
+            return False, str(e)
+        
 
         token: int = instrument_data.get('token', None)
         broker: BrokerEnum = instrument_data.get('broker', None)
@@ -61,6 +80,39 @@ class InstrumentBase:
 
         return True, uuid_key
     
+    def get_instrument_by_uuid(self, uuid_str: str):
+        return instrument_collection.find_one({"uuid": uuid_str})
+
+    def get_instrument(self, token: int, broker: BrokerEnum):
+        return instrument_collection.find_one({"token": token, "broker": broker.name})
+
+    def get_instrument_by_id(self, mongo_id: str):
+        try:
+            return instrument_collection.find_one({"_id": ObjectId(mongo_id)})
+        except Exception:
+            return None
+
+    def remove_instrument(self, token: int, broker: BrokerEnum) -> bool:
+        result = instrument_collection.delete_one({"token": token, "broker": broker.name})
+        return result.deleted_count > 0
+
+    def get_all_instruments(self):
+        return list(instrument_collection.find())
+
+    def get_instrument_by_attribute(self, attribute: str, value: str):
+        if attribute not in self.allowed_keys:
+            return False, f"Invalid attribute: {attribute}"
+        
+        results = list(instrument_collection.find({attribute: value}))
+        if results:
+            return True, results
+        return False, f"No instruments found with {attribute} = {value}"
+
+    def print(self) -> None:
+        count = instrument_collection.count_documents({})
+        self.logger.info(f'All instruments: {count}')
+
+    '''    
     def get_instrument_by_uuid(self, instrument_id: uuid) -> dict:
         return self.instruments.get(instrument_id, None)
     
@@ -97,7 +149,7 @@ class InstrumentBase:
             return False, error
         
     def print(self) -> None:
-        self.logger.info(f'All instruments: {len(self.instruments)}')
+        self.logger.info(f'All instruments: {len(self.instruments)}')'''
 
 # to have singleton like behavior
 instrument_base = InstrumentBase()

@@ -16,8 +16,8 @@ def store_instruments():
     instrument_angle_one = InstrumentAngelOne()
 
     instrument_icici.parse_file('data/instrument/icici/NSEScripMaster.txt')
-    instrument_angle_one.parse_file('data/instrument/angel_one/EQIns.json')
-    instrument_base.print()
+    #instrument_angle_one.parse_file('data/instrument/angel_one/EQIns.json')
+    #instrument_base.print()
 
     strategy_logger.info('All instruments added successfully')
 
@@ -27,13 +27,26 @@ def try_login():
     login.get_demat_holdings()
     login.get_funds()
 
+    order_response = login.breeze.place_order(
+        stock_code="RELIANCE",
+        exchange_code="NSE",
+        product="cash",
+        action="buy",
+        order_type="market",
+        quantity=1,
+        price=0,
+        validity="day"
+    )
+
+    print(order_response)
+
 def try_order():
     inst = instrument_base.get_instrument(100, BrokerEnum.ICICI)
     strategy_logger.info(f"Instrument: {inst}")
 
 def main():
     store_instruments()
-    #try_login()
+    try_login()
     try_order()
 
 if __name__ == '__main__':
