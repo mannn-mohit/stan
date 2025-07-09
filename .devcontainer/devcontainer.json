@@ -1,15 +1,19 @@
 {
-  "name": "Python + Mongo Dev Container",
+  "name": "stan dev",
   "dockerComposeFile": [
-    "../baked/docker-compose.yml"
+    "../docker-compose.yml"
   ],
   "service": "stan",
   "workspaceFolder": "/workspace",
+  "remoteUser": "dev",
   "customizations": {
     "vscode": {
       "extensions": [
+        "ms-azuretools.vscode-docker",
         "ms-python.python",
-        "ms-python.vscode-pylance"
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "eamodio.gitlens"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"

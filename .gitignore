@@ -1,4 +1,4 @@
-[Ll]ogs/
+logs/*
+!logs/.gitkeep
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]

@@ -6,8 +6,13 @@ RUN apt-get update && \
     echo "Asia/Kolkata" > /etc/timezone && \
     apt-get clean
 
+RUN useradd -ms /bin/bash dev
+
 WORKDIR /workspace
-COPY . /workspace/
+USER dev
+
+# Copy source code and install Python deps
+COPY --chown=dev:dev . /workspace
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt

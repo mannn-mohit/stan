@@ -47,7 +47,7 @@ def try_order():
 def main():
     store_instruments()
     try_login()
-    try_order()
+    #try_order()
 
 if __name__ == '__main__':
     main()
