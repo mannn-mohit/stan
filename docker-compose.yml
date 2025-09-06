@@ -1,5 +1,6 @@
 services:
-  stan:
+  stan-app:
+    image: stan-app:latest
     build:
       context: .
       dockerfile: Dockerfile

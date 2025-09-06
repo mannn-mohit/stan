@@ -28,13 +28,24 @@ class InstrumentBase:
     def convert_value(self, key: str, value: str):
         if value is None:
             return None
-        
-        if key in ["token", "lot_size"]:
-            return int(value)
-        elif key == "tick_size":
-            return float(value)
-        else:
-            return value
+
+        value = value.strip()
+
+        if key in {"lot_size"}:
+            if value.isdigit():
+                return int(value)
+            else:
+                print(f"⚠️ Cannot convert to int: key='{key}', value='{value}'")
+                return None
+
+        if key == "tick_size":
+            try:
+                return float(value)
+            except ValueError:
+                print(f"⚠️ Cannot convert to float: key='{key}', value='{value}'")
+                return None
+
+        return value
         
     def serialize_for_mongo(self, data: dict) -> dict:
         def serialize(val):
@@ -71,14 +82,6 @@ class InstrumentBase:
             return True, "Inserted or updated instrument"
         except Exception as e:
             return False, str(e)
-        
-
-        token: int = instrument_data.get('token', None)
-        broker: BrokerEnum = instrument_data.get('broker', None)
-        self.broker_key[(token, broker)] = uuid_key
-        print(f'Broker key : {self.broker_key}')
-
-        return True, uuid_key
     
     def get_instrument_by_uuid(self, uuid_str: str):
         return instrument_collection.find_one({"uuid": uuid_str})

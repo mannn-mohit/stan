@@ -3,7 +3,7 @@
   "dockerComposeFile": [
     "../docker-compose.yml"
   ],
-  "service": "stan",
+  "service": "stan-app",
   "workspaceFolder": "/workspace",
   "remoteUser": "dev",
   "customizations": {
